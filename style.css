@@ -1,0 +1,205 @@
+/* ===========================
+   BAYRAM KUTLAMA - STYLE.CSS
+   Şeker %80 / Yazı %20
+   =========================== */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold: #FFD700;
+  --gold-light: #FFF0A0;
+  --bg-deep: #050812;
+}
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: var(--bg-deep);
+  font-family: 'Cinzel Decorative', serif;
+}
+
+/* ===== LOADER ===== */
+#loader {
+  position: fixed; inset: 0;
+  background: radial-gradient(ellipse at center, #0a1628 0%, #020814 100%);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9999;
+  transition: opacity 1s ease, visibility 1s ease;
+}
+#loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.loader-inner { text-align: center; }
+.loader-crescent {
+  font-size: 70px; color: var(--gold); display: block;
+  filter: drop-shadow(0 0 30px rgba(255,215,0,0.8));
+  animation: crescentSpin 3s linear infinite;
+}
+.loader-text {
+  color: var(--gold-light); font-size: 16px; margin-top: 18px;
+  letter-spacing: 4px; opacity: 0.8;
+}
+@keyframes crescentSpin {
+  0%   { transform: rotate(0deg)   scale(1);   }
+  50%  { transform: rotate(180deg) scale(1.15);}
+  100% { transform: rotate(360deg) scale(1);   }
+}
+
+/* ===== THREE.JS CANVAS (fills everything) ===== */
+#three-canvas {
+  position: fixed; inset: 0;
+  width: 100%; height: 100%;
+  z-index: 1;
+}
+
+/* ===== UI OVERLAY ===== */
+#ui-overlay {
+  position: fixed; inset: 0; z-index: 10;
+  pointer-events: none; overflow: hidden;
+}
+
+/* ===== BACKGROUND TITLE (small, behind everything) ===== */
+#bg-title {
+  position: absolute;
+  top: 6%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  opacity: 0;
+  z-index: 5;
+  transition: opacity 1.5s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+#bg-title.visible { opacity: 1; }
+
+#bg-title .line1 {
+  display: block;
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(11px, 1.4vw, 22px);
+  font-weight: 400;
+  letter-spacing: 0.25em;
+  color: rgba(255, 220, 140, 0.35);
+  text-shadow: 0 0 12px rgba(255,200,80,0.2);
+}
+#bg-title .line2 {
+  display: block;
+  font-family: 'Amiri', serif;
+  font-size: clamp(9px, 1vw, 16px);
+  letter-spacing: 0.3em;
+  color: rgba(255, 200, 100, 0.2);
+  margin-top: 6px;
+}
+
+/* ===== STAR FIELD ===== */
+#star-field { position: absolute; inset: 0; pointer-events: none; }
+.star {
+  position: absolute; background: white; border-radius: 50%;
+  animation: starTwinkle var(--dur) ease-in-out var(--delay) infinite;
+}
+@keyframes starTwinkle {
+  0%,100% { opacity: var(--base-op); transform: scale(1);   }
+  50%      { opacity: 1;              transform: scale(1.6); }
+}
+
+/* ===== EXPLOSION TEXT (appears after candy explodes) ===== */
+#explosion-text {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  z-index: 100;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+}
+#explosion-text.show {
+  animation: explodeTextReveal 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+#explosion-text .main-msg {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(18px, 3vw, 48px);
+  font-weight: 900;
+  background: linear-gradient(135deg, #FFD700 0%, #FFF8B0 40%, #FFD700 70%, #FFA500 100%);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: none;
+  filter: drop-shadow(0 0 18px rgba(255,215,0,0.7));
+  animation: goldShimmer 2.5s ease infinite 1.2s;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+#explosion-text .sub-msg {
+  display: block;
+  font-family: 'Amiri', serif;
+  font-size: clamp(12px, 1.6vw, 24px);
+  color: rgba(255,220,140,0.85);
+  letter-spacing: 0.2em;
+  margin-top: 12px;
+}
+#explosion-text.fade-out {
+  animation: explodeTextFade 1s ease forwards;
+}
+@keyframes explodeTextReveal {
+  0%   { opacity: 0; transform: translate(-50%,-50%) scale(0) rotate(-10deg); }
+  60%  { opacity: 1; transform: translate(-50%,-50%) scale(1.1) rotate(2deg); }
+  100% { opacity: 1; transform: translate(-50%,-50%) scale(1)   rotate(0deg); }
+}
+@keyframes explodeTextFade {
+  0%   { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%,-50%) scale(0.8); }
+}
+@keyframes goldShimmer {
+  0%   { background-position: 0%   50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0%   50%; }
+}
+
+/* ===== CSS BURST PARTICLES ===== */
+.candy-burst-particle {
+  position: fixed; border-radius: 50%; pointer-events: none; z-index: 80;
+  animation: candyBurstAnim var(--dur) ease-out var(--delay) forwards;
+}
+@keyframes candyBurstAnim {
+  0%   { transform: translate(0,0) scale(1) rotate(0deg);                           opacity: 1; }
+  100% { transform: translate(var(--tx),var(--ty)) scale(0) rotate(var(--rot));     opacity: 0; }
+}
+
+.candy-star {
+  position: fixed; pointer-events: none; z-index: 80;
+  font-size: var(--size);
+  animation: starBurstAnim var(--dur) ease-out var(--delay) forwards;
+}
+@keyframes starBurstAnim {
+  0%   { transform: translate(0,0) scale(0) rotate(0deg);                               opacity: 1; }
+  25%  { transform: translate(calc(var(--tx)*0.3),calc(var(--ty)*0.3)) scale(1.2) rotate(90deg); opacity: 1; }
+  100% { transform: translate(var(--tx),var(--ty)) scale(0) rotate(var(--rot));          opacity: 0; }
+}
+
+.glow-ring {
+  position: fixed; border-radius: 50%; pointer-events: none; z-index: 79;
+  border: 2px solid var(--color);
+  animation: glowRingAnim var(--dur) ease-out var(--delay) forwards;
+}
+@keyframes glowRingAnim {
+  0%   { transform: translate(-50%,-50%) scale(0); opacity: 1; box-shadow: 0 0 30px var(--color); }
+  100% { transform: translate(-50%,-50%) scale(6); opacity: 0; }
+}
+
+/* ===== FLOATING EMOJIS ===== */
+#float-emojis { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.float-emoji {
+  position: absolute; font-size: 32px; opacity: 0;
+  animation: floatUp var(--dur) ease-out var(--delay) infinite;
+}
+@keyframes floatUp {
+  0%   { transform: translateY(110vh) translateX(0) rotate(0deg) scale(0); opacity: 0; }
+  8%   { opacity: 0.7; transform: translateY(85vh) translateX(var(--drift)) rotate(20deg) scale(1); }
+  90%  { opacity: 0.4; transform: translateY(-15vh) translateX(calc(var(--drift)*3)) rotate(340deg) scale(0.7); }
+  100% { opacity: 0;   transform: translateY(-25vh) translateX(calc(var(--drift)*3.5)) rotate(380deg) scale(0); }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  #explosion-text .main-msg { font-size: clamp(14px, 5vw, 28px); white-space: normal; text-align: center; }
+}
